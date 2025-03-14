@@ -59,7 +59,7 @@ def store_xyz(mem, x, y, z):
 
 def query(mem, N, P, x):
     """
-    Query in DiadicMemory
+    Query in DyadicMemory
     """
     sums = np.zeros(N, dtype=np.uint32)
     for addr in xaddr(x):
@@ -157,7 +157,7 @@ class TriadicMemory:
         return size * 3
 
 
-class DiadicMemory:
+class DyadicMemory:
     """
     this is a convenient object front end for SDM functions
     """

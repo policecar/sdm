@@ -59,7 +59,7 @@ def store_xyz(mem, x, y, z):
 @numba.jit(nopython=True)
 def query(mem, N, P, x):
     """
-    Query in DiadicMemory
+    Query in DyadicMemory
     """
     sums = np.zeros(mem.shape[1], dtype=np.uint32)
     for addr in xaddr(x, N):
@@ -145,7 +145,7 @@ class TriadicMemory:
         return self.mem.shape[0]
 
 
-class DiadicMemory:
+class DyadicMemory:
     """
     this is a convenient object front end for SDM functions
     """
@@ -156,7 +156,7 @@ class DiadicMemory:
         P is the count of solid bits e.g. 10
         """
         self.mem = np.zeros((N * (N - 1) // 2, N), dtype=np.uint8)
-        print(f"DiadicMemory size {self.mem.size / 1000000} M bytes")
+        print(f"DyadicMemory size {self.mem.size / 1000000} M bytes")
         self.N = N
         self.P = P
 

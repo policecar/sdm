@@ -1,4 +1,4 @@
-# Test for DiadicMemory
+# Test for DyadicMemory
 """
 The xcount variable below sets how many records would be stored & queried within memory
 """
@@ -7,8 +7,8 @@ import argparse
 
 from time import time
 import numpy as np
-from sdm.mem_sdr import DiadicMemory as MemDiadicMemory
-from sdm.sdr import DiadicMemory
+from sdm.mem_sdr import DyadicMemory as MemDyadicMemory  # noqa: F401
+from sdm.sdr import DyadicMemory
 from sdm.utils import random_sdrs
 
 
@@ -16,9 +16,9 @@ SDR_SIZE = 1000  # Size of SDRs in bits
 SDR_BITS = 10  # Default number of ON bits (aka solidity)
 
 
-def test_diadic(mem, xcount):
+def test_dyadic(mem, xcount):
     print(
-        f"Testing DiadicMemory for {xcount} entries,\nsdr size is {SDR_SIZE} with {SDR_BITS} of ON bits"
+        f"Testing DyadicMemory for {xcount} entries,\nsdr size is {SDR_SIZE} with {SDR_BITS} of ON bits"
     )
     # The number of records to write and query
 
@@ -67,17 +67,17 @@ def test_diadic(mem, xcount):
 
 
 parser = argparse.ArgumentParser(
-    prog="diadic tester", description="test the diadic memory"
+    prog="dyadic tester", description="test the dyadic memory"
 )
 parser.add_argument("-c", "--count", type=int, default=45000)
 parser.add_argument("-m", "--mem", action="store_true")
 args = parser.parse_args()
 
 if args.mem:
-    mem = MemDiadicMemory(
+    mem = MemDyadicMemory(
         SDR_SIZE, SDR_BITS
     )  ######################################## Initialize the memory
 else:
-    mem = DiadicMemory(SDR_SIZE, SDR_BITS)
+    mem = DyadicMemory(SDR_SIZE, SDR_BITS)
 
-test_diadic(mem, args.count)
+test_dyadic(mem, args.count)

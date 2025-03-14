@@ -9,7 +9,7 @@ https://github.com/PeterOvermann/TriadicMemory/
 ## Usage
 
 ```shell
-python run_diadic_test.py
+python run_dyadic_test.py
 python run_triadic_test.py
 ```
 
