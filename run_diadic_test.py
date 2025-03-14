@@ -7,8 +7,8 @@ import argparse
 
 from time import time
 import numpy as np
-from sdm.mem_sdrsdm import DiadicMemory as MemDiadicMemory
-from sdm.sdrsdm import DiadicMemory
+from sdm.mem_sdr import DiadicMemory as MemDiadicMemory
+from sdm.sdr import DiadicMemory
 from sdm.utils import random_sdrs
 
 

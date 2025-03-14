@@ -2,8 +2,8 @@ import argparse
 
 from time import time
 
-from sdm.sdrsdm import TriadicMemory
-from sdm.mem_sdrsdm import TriadicMemory as MemTriadicMemory
+from sdm.sdr import TriadicMemory
+from sdm.mem_sdr import TriadicMemory as MemTriadicMemory
 from sdm.utils import random_sdrs, sdr_distance
 
 
