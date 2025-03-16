@@ -87,7 +87,7 @@ def test_triadic(mem, test_len):
 
 
 parser = argparse.ArgumentParser(
-    prog="dyadic tester", description="test the dyadic memory"
+    prog="triadic tester", description="test the triadic memory"
 )
 parser.add_argument("-c", "--count", type=int, default=100000)
 parser.add_argument("-m", "--mem", action="store_true")

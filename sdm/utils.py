@@ -5,13 +5,13 @@ Using numba they-re pretty fast - generators run at 200k/sec for SDRs which are 
 SDR distance measurement runs at over 2M/sec for the same, 40 bit size test
 
 Functions:
-    near_sdr()    - changes a number of bits in the input SDR
-    near_sdrs()   - generates a list of neighboring SDRs
-    random_sdrs() - generates a list of random SDRs - two consecutive
-                    ones have zero overlap
+    near_sdr()      - changes a number of bits in the input SDR
+    near_sdrs()     - generates a list of neighboring SDRs
+    random_sdrs()   - generates a list of random SDRs - two consecutive
+                      ones have zero overlap
 
-    sdr_overlap() - measures overlap in bits between two SDRs
-    sdr_distance()- a metric of distance between two SDRs
+    sdr_overlap()   - measures overlap in bits between two SDRs
+    sdr_distance()  - a metric of distance between two SDRs
 
     Beware both sdr_overlap and sdr_distance work on sorted SDRs
 
