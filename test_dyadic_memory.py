@@ -4,12 +4,13 @@ The xcount variable below sets how many records would be stored & queried within
 """
 
 import argparse
+import numpy as np
 
 from time import time
-import numpy as np
-from sdm.mem_sdr import DyadicMemory as MemDyadicMemory  # noqa: F401
-from sdm.sdr import DyadicMemory
-from sdm.utils import random_sdrs
+
+from sdm.core.mem_sdr import DyadicMemory as MemDyadicMemory  # noqa: F401
+from sdm.core.sdr import DyadicMemory
+from sdm.core.sdr_utils import random_sdrs
 
 
 SDR_SIZE = 1000  # Size of SDRs in bits

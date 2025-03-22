@@ -26,6 +26,23 @@ import numba
 
 @numba.jit(nopython=True)
 def xaddr(x, N):
+    """
+    Convert an SDR pattern to memory addresses using a dyadic encoding scheme.
+
+    This function computes memory addresses based on pairs of active bits in the input pattern.
+    Each pair (x[i], x[j]) where i > j produces an address based on a triangular indexing formula.
+
+    Args:
+        x (array-like):     A sorted SDR (indices of active bits).
+        N (int):            The dimension of the full SDR vector.
+
+    Returns:
+        list: Memory addresses corresponding to all pairs of active bits in x.
+
+    Note:
+        The formula x[i] * (x[i] - 1) // 2 + x[j] maps each unique pair to
+        a unique address in the triangular upper portion of an NxN matrix.
+    """
     addr = []
     for i in range(1, len(x)):
         for j in range(i):
@@ -99,6 +116,26 @@ def queryY(mem, P, x, z):
 
 @numba.jit(nopython=True)
 def sums2sdr(sums, P):
+    """
+    Convert a vector of activation sums to an SDR with P active bits.
+
+    This function selects the P highest values from the sums vector and
+    returns their indices as a sparse representation.
+
+    Args:
+        sums (numpy.ndarray):   Vector of activation counts or values.
+        P (int):                Number of active bits in the output sparse SDR.
+
+    Returns:
+        numpy.ndarray:          Indices of the P highest values in sums.
+                                If there are fewer than P non-zero values,
+                                returns indices of all non-zero values.
+
+    Note:
+        If multiple values tie for the P-th highest position,
+        all indices with values >= the threshold will be included,
+        potentially resulting in more than P active bits.
+    """
     # this does what binarize() does in C
     ssums = sums.copy()
     ssums.sort()
@@ -110,17 +147,40 @@ def sums2sdr(sums, P):
 
 
 class TriadicMemory:
+    """
+    A class implementing a triadic sparse distributed memory
+    that stores associations between three patterns (x, y, z).
+
+    This memory structure can retrieve any one pattern when provided with the other two.
+    """
+
     def __init__(self, N, P):
+        """
+        Initialize a triadic memory with dimensions N x N x N.
+        """
         self.mem = np.zeros((N, N, N), dtype=np.uint8)
         self.P = P
 
     def store(self, x, y, z):
+        """
+        Store a triple association between patterns x, y, and z.
+
+        Args:
+           x, y, z (array-like):    Sorted sparse SDRs to associate.
+        """
         store_xyz(self.mem, x, y, z)
 
     def query(self, x, y, z=None):
-        # query for either x, y or z.
-        # The queried member must be provided as None
-        # the other two members have to be encoded as sorted sparse SDRs
+        """
+        Query the memory for the missing pattern.
+        Provide two patterns and set the third to None to retrieve it.
+
+        Args:
+           x, y, z: Two patterns as sorted sparse SDRs, with the third as None.
+
+        Returns:
+           The missing pattern as a sorted sparse SDR.
+        """
         if z is None:
             return queryZ(self.mem, self.P, x, y)
         elif x is None:
@@ -129,31 +189,48 @@ class TriadicMemory:
             return queryY(self.mem, self.P, x, z)
 
     def query_X(self, y, z):
+        """Query for x given y and z."""
         return queryX(self.mem, self.P, y, z)
 
     def query_Y(self, x, z):
+        """Query for y given x and z."""
         return queryY(self.mem, self.P, x, z)
 
     def query_Z(self, x, y):
+        """Query for z given x and y."""
         return queryZ(self.mem, self.P, x, y)
 
     def query_x_with_P(self, y, z, P):
+        """
+        Query for x with custom sparsity parameter P.
+
+        Args:
+           y, z: Patterns as sorted sparse SDRs.
+           P (int): Custom number of active bits to use.
+        """
         return queryX(self.mem, P, y, z)
 
     @property
     def N(self):
+        """Return the dimension size of the memory."""
         return self.mem.shape[0]
 
 
 class DyadicMemory:
     """
-    this is a convenient object front end for SDM functions
+    An object-oriented interface for Sparse Distributed Memory (SDM)
+    implementing a dyadic memory model.
+
+    This class provides methods to store and retrieve Sparse Distributed Representations (SDRs)
+    using an associative memory approach. It uses a dyadic addressing scheme
+    where pairs of active bits in the input pattern determine memory addresses.
+
     """
 
     def __init__(self, N, P):
         """
         N is SDR vector size, e.g. 1000
-        P is the count of solid bits e.g. 10
+        P is the count of solid bits, e.g. 10
         """
         self.mem = np.zeros((N * (N - 1) // 2, N), dtype=np.uint8)
         print(f"DyadicMemory size {self.mem.size / 1000000} M bytes")
@@ -161,7 +238,28 @@ class DyadicMemory:
         self.P = P
 
     def store(self, x, y):
+        """
+        Store a pattern y associated with key x in memory
+        by writing the pattern y to all memory locations addressed by x.
+
+        Args:
+            x (array-like):     The key pattern as a sorted sparse SDR.
+            y (array-like):     The value pattern as a sorted sparse SDR.
+        """
         store_xy(self.mem, self.N, x, y)
 
     def query(self, x):
+        """
+        Retrieve a pattern associated with key x from memory
+        by reading from all memory locations addressed by x and constructing
+        an output SDR based on activation counts.
+
+        Args:
+            x (array-like):     The key pattern as a sorted sparse SDR.
+
+        Returns:
+            array-like:         A sorted sparse SDR representing the retrieved pattern.
+                                The output will have P active bits corresponding to the
+                                highest activation counts.
+        """
         return query(self.mem, self.N, self.P, x)

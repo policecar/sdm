@@ -1,0 +1,15 @@
+data:
+  data_dir: "./data"
+  input_path: "./data/pg4078.txt"
+  hf_dataset: false
+  dataset_name: "fhswf/TinyStoriesV2_cleaned"
+
+model:
+  n: 1000
+  p: 10
+  encoder_name: "CharacterPositionEncoder"
+
+train:
+  train: true
+  epochs: 4
+  max_tokens: 50000

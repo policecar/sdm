@@ -97,6 +97,50 @@ def sdr_union(n1, n2):
     return np.array(out, dtype=np.uint32)
 
 
+@numba.jit(nopython=True)
+def sdr_xor(a, b):
+    """
+    XOR operation on two sorted SDRs: elements that are in exactly one of the arrays.
+    Equivalent to (A ∪ B) - (A ∩ B), but computed more efficiently.
+
+    Args:
+        a: First sorted array
+        b: Second sorted array
+
+    Returns:
+        Array containing elements that are in exactly one of A or B
+    """
+    result = []
+    i, j = 0, 0
+
+    while i < len(a) or j < len(b):
+        # If we've reached the end of one array, add remaining elements from the other
+        if i >= len(a):
+            result.append(b[j])
+            j += 1
+            continue
+        if j >= len(b):
+            result.append(a[i])
+            i += 1
+            continue
+
+        # Compare elements
+        if a[i] < b[j]:
+            # Element in A but not in B
+            result.append(a[i])
+            i += 1
+        elif a[i] > b[j]:
+            # Element in B but not in A
+            result.append(b[j])
+            j += 1
+        else:
+            # Element in both A and B - skip
+            i += 1
+            j += 1
+
+    return np.array(result, dtype=a.dtype)
+
+
 @numba.njit(fastmath=True)
 def sdr_distance(n1, n2):
     """

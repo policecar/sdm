@@ -1,7 +1,7 @@
 import numpy as np
 
-from sdm.utils import empty_sdr, random_sdr, sdr_overlap, sdr_union
-from sdm.sdr import TriadicMemory
+from sdm.core.sdr_utils import empty_sdr, random_sdr, sdr_overlap, sdr_union
+from sdm.core.sdr import TriadicMemory
 
 
 class TriadicTemporalMemory:
@@ -32,9 +32,9 @@ class TriadicTemporalMemory:
         self.p = p
 
         # Initialize circuit state variables with null/empty vectors
-        self.reset()
+        self.reset_state()
 
-    def reset(self):
+    def reset_state(self):
         """Reset all state variables to empty SDRs"""
         null_vector = empty_sdr()
         self.i = null_vector  # Current input

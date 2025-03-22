@@ -2,9 +2,9 @@ import argparse
 
 from time import time
 
-from sdm.sdr import TriadicMemory
-from sdm.mem_sdr import TriadicMemory as MemTriadicMemory
-from sdm.utils import random_sdrs, sdr_distance
+from sdm.core.sdr import TriadicMemory
+from sdm.core.mem_sdr import TriadicMemory as MemTriadicMemory
+from sdm.core.sdr_utils import random_sdrs, sdr_distance
 
 
 SDR_SIZE = 1000  ################################# The size of the test SDRs

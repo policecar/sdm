@@ -2,14 +2,18 @@
 
 Experiments with sparse distributed memory.
 
-## Source 
+## Installation
 
-https://github.com/PeterOvermann/TriadicMemory/
+```shell
+uv venv
+source .venv/bin/activate
+uv pip install -U pip
+uv pip install -r requirements.txt
+```
 
 ## Usage
 
 ```shell
-python run_dyadic_test.py
-python run_triadic_test.py
+python test_dyadic_memory.py
+python test_triadic_memory.py
 ```
-
